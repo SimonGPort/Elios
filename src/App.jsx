@@ -8,11 +8,12 @@ function App() {
   const [count, setCount] = useState(0);
   const [heroSpriteCol, setHeroSpriteCol] = useState(0);
   const [heroState, setHeroState] = useState("rightIdleNoWeapon");
-  const [worldPos, setWorldPos] = useState({ x: -24, y: -4 });
+  const [worldPos, setWorldPos] = useState({ x: 32, y: 32 });
   // const [worldPos, setWorldPos] = useState({ x: 0, y: 0});
   const viewPortSize = 64;
   const ANIMATIONSPEED = 120; // milliseconds (animation speed)
   const TILE_SIZE = 50;
+  const mapSize = 640;
 
   const heroStateInfo = {
     rightIdleNoWeapon: { frameCount: 12, row: 0 },
@@ -131,15 +132,21 @@ function App() {
       >
         {/* 🌍 MAP (moves) */}
         <div
-          onClick={handleMapClick}
           style={{
             position: "absolute",
-            width: "2000px", // 👈 BIGGER than screen
-            height: "2000px",
-            backgroundImage: "url('/dungeon.jfif')",
-            backgroundSize: "contain", // 👈 show full image without crop
+            width: `${mapSize}px`,
+            height: `${mapSize}px`,
+            backgroundImage: "url('/map.jpg')",
+            backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
-            transform: `translate(${worldPos.x}px, ${worldPos.y}px)`,
+
+            // 🎯 center map in viewport
+            left: "50%",
+            top: "50%",
+            transform: `
+      translate(-50%, -50%)
+      translate(${worldPos.x}px, ${worldPos.y}px)
+    `,
           }}
         />
         <div
