@@ -65,8 +65,69 @@ function App() {
     const tileX = Math.floor(x / TILE_SIZE);
     const tileY = Math.floor(y / TILE_SIZE);
 
+    const clickedTile = { x: tileX, y: tileY };
+
     console.log("tile:", tileX, tileY);
+    const path = getShortestPath(heroSquarePosition, clickedTile);
+    walkPath(path);
   };
+
+  function getShortestPath(start, goal) {
+    const size = MAP_SIZE / TILE_SIZE; // 10
+
+    const queue = [[start]];
+    const visited = new Set();
+
+    const key = (p) => `${p.x},${p.y}`;
+
+    while (queue.length > 0) {
+      const path = queue.shift();
+      const current = path[path.length - 1];
+
+      if (current.x === goal.x && current.y === goal.y) {
+        return path;
+      }
+
+      if (visited.has(key(current))) continue;
+      visited.add(key(current));
+
+      const neighbors = [
+        // orthogonal moves
+        { x: current.x + 1, y: current.y },
+        { x: current.x - 1, y: current.y },
+        { x: current.x, y: current.y + 1 },
+        { x: current.x, y: current.y - 1 },
+
+        // diagonal moves
+        { x: current.x + 1, y: current.y + 1 },
+        { x: current.x + 1, y: current.y - 1 },
+        { x: current.x - 1, y: current.y + 1 },
+        { x: current.x - 1, y: current.y - 1 },
+      ];
+
+      for (const n of neighbors) {
+        if (n.x >= 0 && n.y >= 0 && n.x < size && n.y < size) {
+          queue.push([...path, n]);
+        }
+      }
+    }
+
+    return [];
+  }
+
+  function walkPath(path) {
+    let i = 0;
+
+    const interval = setInterval(() => {
+      if (i >= path.length) {
+        clearInterval(interval);
+        return;
+      }
+
+      setHeroSquarePosition(path[i]);
+      i++;
+    }, 150); // speed of movement
+  }
 
   return (
     <>
