@@ -8,7 +8,8 @@ function App() {
   const [count, setCount] = useState(0)
   const [heroSpriteCol, setHeroSpriteCol] = useState(0)
   const [heroState, setHeroState] = useState("rightIdleNoWeapon")
-  const [worldPos, setWorldPos] = useState({ x: -24, y: 43});
+  const [worldPos, setWorldPos] = useState({ x: -24, y: -4});
+    // const [worldPos, setWorldPos] = useState({ x: 0, y: 0});
   const viewPortSize = 64;
   const ANIMATIONSPEED = 120; // milliseconds (animation speed)
   const WALKINGSPEED=5
@@ -85,17 +86,17 @@ window.addEventListener("ArrowLeft", handleKeyDown);
   }}
 >
   {/* 🌍 MAP (moves) */}
-  <div
-    style={{
-      position: "absolute",
-      width: "100vw",
-      height: "100vh",
-      backgroundImage: "url('/dungeon.jfif')",
-       transform: "scale(1.5)",
-      backgroundPosition: "center",
-      transform: `translate(${worldPos.x}px, ${worldPos.y}px)`,
-    }}
-  />
+<div
+  style={{
+    position: "absolute",
+    width: "2000px",   // 👈 BIGGER than screen
+    height: "2000px",
+    backgroundImage: "url('/dungeon.jfif')",
+    backgroundSize: "contain", // 👈 show full image without crop
+    backgroundRepeat: "no-repeat",
+    transform: `translate(${worldPos.x}px, ${worldPos.y}px)`,
+  }}
+/>
   <div
     style={{
       position: "absolute",
