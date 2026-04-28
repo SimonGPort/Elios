@@ -5,13 +5,11 @@ function App() {
   const [heroSpriteCol, setHeroSpriteCol] = useState(0);
   const [heroState, setHeroState] = useState("rightIdleNoWeapon");
   const [heroSquarePosition, setHeroSquarePosition] = useState({ x: 0, y: 0 });
-  // const [worldPos, setWorldPos] = useState({ x: 32, y: 32 });
-  // const [worldPos, setWorldPos] = useState({ x: 0, y: 0});
   const viewPortSize = 64;
   const ANIMATIONSPEED = 120; // milliseconds (animation speed)
-  const TILESIZE = 64;
-  const MAPSIZE = 640;
-  const offset = MAPSIZE / 2 - TILESIZE / 2;
+  const TILE_SIZE = 64;
+  const MAP_SIZE = 640;
+  const offset = MAP_SIZE / 2 - TILE_SIZE / 2;
 
   const heroStateInfo = {
     rightIdleNoWeapon: { frameCount: 12, row: 0 },
@@ -58,66 +56,17 @@ function App() {
     return () => clearInterval(interval);
   }, [heroState]);
 
-  // useEffect(() => {
+  const handleMapClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
 
-  // const handleKeyDown = (e) => {
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-  //   setWorldPos((prev) => {
-  //     let newPos = { ...prev };
+    const tileX = Math.floor(x / TILE_SIZE);
+    const tileY = Math.floor(y / TILE_SIZE);
 
-  //     if (e.key === "ArrowUp") {
-  //       newPos.y += WALKINGSPEED;
-  //       setHeroState("upWalkNoWeapon");
-  //     }
-
-  //     if (e.key === "ArrowDown") {
-  //       newPos.y -= WALKINGSPEED;
-  //       setHeroState("downWalkNoWeapon");
-  //     }
-
-  //     if (e.key === "ArrowLeft") {
-  //       newPos.x += WALKINGSPEED;
-  //       setHeroState("leftWalkNoWeapon");
-  //     }
-
-  //     if (e.key === "ArrowRight") {
-  //       newPos.x -= WALKINGSPEED;
-  //       setHeroState("rightWalkNoWeapon");
-  //     }
-
-  //     return newPos;
-  //   });
-  // };
-
-  // window.addEventListener("keydown", handleKeyDown);
-  // window.addEventListener("keyup", handleKeyDown);
-  // window.addEventListener("ArrowRight", handleKeyDown);
-  // window.addEventListener("ArrowLeft", handleKeyDown);
-
-  //       return () => {
-  // window.addEventListener("keydown", handleKeyDown);
-  // window.addEventListener("keyup", handleKeyDown);
-  // window.addEventListener("ArrowRight", handleKeyDown);
-  // window.addEventListener("ArrowLeft", handleKeyDown);
-  //     };
-  // }, []);
-
-  // const handleMapClick = (e) => {
-  //   const rect = e.currentTarget.getBoundingClientRect();
-
-  //   const screenX = e.clientX - rect.left;
-  //   const screenY = e.clientY - rect.top;
-
-  //   const worldX = screenX - worldPos.x;
-  //   const worldY = screenY - worldPos.y;
-
-  //   const tileX = Math.floor(worldX / TILE_SIZE);
-  //   const tileY = Math.floor(worldY / TILE_SIZE);
-
-  //   console.log("tile:", tileX, tileY);
-
-  //   console.log("world click:", worldX, worldY);
-  // };
+    console.log("tile:", tileX, tileY);
+  };
 
   return (
     <>
@@ -130,20 +79,22 @@ function App() {
       >
         {/* 🌍 MAP (moves) */}
         <div
+          onClick={handleMapClick}
           style={{
             position: "absolute",
-            width: `${MAPSIZE}px`,
-            height: `${MAPSIZE}px`,
+            width: `${MAP_SIZE}px`,
+            height: `${MAP_SIZE}px`,
             backgroundImage: "url('/map.jpg')",
-            backgroundSize: "contain",
+            backgroundSize: `${MAP_SIZE}px ${MAP_SIZE}px`,
             backgroundRepeat: "no-repeat",
+            imageRendering: "pixelated",
 
             // 🎯 center map in viewport
             left: "50%",
             top: "50%",
             transform: `
       translate(-50%, -50%)
-      translate(${offset - heroSquarePosition.x * TILESIZE}px, ${offset - heroSquarePosition.y * TILESIZE}px)
+      translate(${offset - heroSquarePosition.x * TILE_SIZE}px, ${offset - heroSquarePosition.y * TILE_SIZE}px)
     `,
           }}
         />
