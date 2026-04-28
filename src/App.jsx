@@ -1,120 +1,165 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect, useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "./assets/vite.svg";
+import heroImg from "./assets/hero.png";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [heroSpriteCol, setHeroSpriteCol] = useState(0)
-  const [heroState, setHeroState] = useState("rightIdleNoWeapon")
-  const [worldPos, setWorldPos] = useState({ x: -24, y: -4});
-    // const [worldPos, setWorldPos] = useState({ x: 0, y: 0});
+  const [count, setCount] = useState(0);
+  const [heroSpriteCol, setHeroSpriteCol] = useState(0);
+  const [heroState, setHeroState] = useState("rightIdleNoWeapon");
+  const [worldPos, setWorldPos] = useState({ x: -24, y: -4 });
+  // const [worldPos, setWorldPos] = useState({ x: 0, y: 0});
   const viewPortSize = 64;
   const ANIMATIONSPEED = 120; // milliseconds (animation speed)
-  const WALKINGSPEED=5
+  const TILE_SIZE = 50;
 
-
-  const heroStateInfo={rightIdleNoWeapon:{frameCount:12, row:0},rightIdleWeapon:{frameCount:12, row:-1}, rightWalkNoWeapon:{frameCount:8, row:-2},rightWalkWeapon:{frameCount:8, row:-3},rightAttackNoWeapon:{frameCount:7, row:-4},rightAttackWeapon:{frameCount:6, row:-5},downIdleNoWeapon:{frameCount:12, row:-6},downIdleWeapon:{frameCount:12, row:-7}, downWalkNoWeapon:{frameCount:8, row:-8},downWalkWeapon:{frameCount:8, row:-9},downAttackNoWeapon:{frameCount:7, row:-10},downAttackWeapon:{frameCount:6, row:-11}, leftIdleNoWeapon:{frameCount:12, row:-12},leftIdleWeapon:{frameCount:12, row:-13}, leftWalkNoWeapon:{frameCount:8, row:-14},leftWalkWeapon:{frameCount:8, row:-15},leftAttackNoWeapon:{frameCount:7, row:-16},leftAttackWeapon:{frameCount:6, row:-17}, upIdleNoWeapon:{frameCount:12, row:-18},upIdleWeapon:{frameCount:12, row:-19}, upWalkNoWeapon:{frameCount:8, row:-20},upWalkWeapon:{frameCount:8, row:-21},upAttackNoWeapon:{frameCount:7, row:-22},upAttackWeapon:{frameCount:6, row:-23}, dead:{frameCount:14, row:-24}};
+  const heroStateInfo = {
+    rightIdleNoWeapon: { frameCount: 12, row: 0 },
+    rightIdleWeapon: { frameCount: 12, row: -1 },
+    rightWalkNoWeapon: { frameCount: 8, row: -2 },
+    rightWalkWeapon: { frameCount: 8, row: -3 },
+    rightAttackNoWeapon: { frameCount: 7, row: -4 },
+    rightAttackWeapon: { frameCount: 6, row: -5 },
+    downIdleNoWeapon: { frameCount: 12, row: -6 },
+    downIdleWeapon: { frameCount: 12, row: -7 },
+    downWalkNoWeapon: { frameCount: 8, row: -8 },
+    downWalkWeapon: { frameCount: 8, row: -9 },
+    downAttackNoWeapon: { frameCount: 7, row: -10 },
+    downAttackWeapon: { frameCount: 6, row: -11 },
+    leftIdleNoWeapon: { frameCount: 12, row: -12 },
+    leftIdleWeapon: { frameCount: 12, row: -13 },
+    leftWalkNoWeapon: { frameCount: 8, row: -14 },
+    leftWalkWeapon: { frameCount: 8, row: -15 },
+    leftAttackNoWeapon: { frameCount: 7, row: -16 },
+    leftAttackWeapon: { frameCount: 6, row: -17 },
+    upIdleNoWeapon: { frameCount: 12, row: -18 },
+    upIdleWeapon: { frameCount: 12, row: -19 },
+    upWalkNoWeapon: { frameCount: 8, row: -20 },
+    upWalkWeapon: { frameCount: 8, row: -21 },
+    upAttackNoWeapon: { frameCount: 7, row: -22 },
+    upAttackWeapon: { frameCount: 6, row: -23 },
+    dead: { frameCount: 14, row: -24 },
+  };
 
   const keyMap = {
-  ArrowDown: "downWalkNoWeapon",
-  ArrowUp: "upWalkNoWeapon",
-  ArrowLeft: "leftWalkNoWeapon",
-  ArrowRight: "rightWalkNoWeapon",
-};
+    ArrowDown: "downWalkNoWeapon",
+    ArrowUp: "upWalkNoWeapon",
+    ArrowLeft: "leftWalkNoWeapon",
+    ArrowRight: "rightWalkNoWeapon",
+  };
 
   useEffect(() => {
-const interval = setInterval(() => {
-  setHeroSpriteCol((prev) => (prev - 1) % heroStateInfo[heroState].frameCount);
-}, ANIMATIONSPEED);
+    const interval = setInterval(() => {
+      setHeroSpriteCol(
+        (prev) => (prev - 1) % heroStateInfo[heroState].frameCount,
+      );
+    }, ANIMATIONSPEED);
 
-  return () => clearInterval(interval);
-}, [heroState]);
+    return () => clearInterval(interval);
+  }, [heroState]);
 
-useEffect(() => {
+  // useEffect(() => {
 
-const handleKeyDown = (e) => {
+  // const handleKeyDown = (e) => {
 
-  setWorldPos((prev) => {
-    let newPos = { ...prev };
+  //   setWorldPos((prev) => {
+  //     let newPos = { ...prev };
 
-    if (e.key === "ArrowUp") {
-      newPos.y += WALKINGSPEED;
-      setHeroState("upWalkNoWeapon");
-    }
+  //     if (e.key === "ArrowUp") {
+  //       newPos.y += WALKINGSPEED;
+  //       setHeroState("upWalkNoWeapon");
+  //     }
 
-    if (e.key === "ArrowDown") {
-      newPos.y -= WALKINGSPEED;
-      setHeroState("downWalkNoWeapon");
-    }
+  //     if (e.key === "ArrowDown") {
+  //       newPos.y -= WALKINGSPEED;
+  //       setHeroState("downWalkNoWeapon");
+  //     }
 
-    if (e.key === "ArrowLeft") {
-      newPos.x += WALKINGSPEED;
-      setHeroState("leftWalkNoWeapon");
-    }
+  //     if (e.key === "ArrowLeft") {
+  //       newPos.x += WALKINGSPEED;
+  //       setHeroState("leftWalkNoWeapon");
+  //     }
 
-    if (e.key === "ArrowRight") {
-      newPos.x -= WALKINGSPEED;
-      setHeroState("rightWalkNoWeapon");
-    }
+  //     if (e.key === "ArrowRight") {
+  //       newPos.x -= WALKINGSPEED;
+  //       setHeroState("rightWalkNoWeapon");
+  //     }
 
-    return newPos;
-  });
-};
+  //     return newPos;
+  //   });
+  // };
 
-window.addEventListener("keydown", handleKeyDown);
-window.addEventListener("keyup", handleKeyDown);
-window.addEventListener("ArrowRight", handleKeyDown);
-window.addEventListener("ArrowLeft", handleKeyDown);
+  // window.addEventListener("keydown", handleKeyDown);
+  // window.addEventListener("keyup", handleKeyDown);
+  // window.addEventListener("ArrowRight", handleKeyDown);
+  // window.addEventListener("ArrowLeft", handleKeyDown);
 
-      return () => {
-window.addEventListener("keydown", handleKeyDown);
-window.addEventListener("keyup", handleKeyDown);
-window.addEventListener("ArrowRight", handleKeyDown);
-window.addEventListener("ArrowLeft", handleKeyDown);
-    };
-}, []);
+  //       return () => {
+  // window.addEventListener("keydown", handleKeyDown);
+  // window.addEventListener("keyup", handleKeyDown);
+  // window.addEventListener("ArrowRight", handleKeyDown);
+  // window.addEventListener("ArrowLeft", handleKeyDown);
+  //     };
+  // }, []);
+
+  const handleMapClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    const screenX = e.clientX - rect.left;
+    const screenY = e.clientY - rect.top;
+
+    const worldX = screenX - worldPos.x;
+    const worldY = screenY - worldPos.y;
+
+    const tileX = Math.floor(worldX / TILE_SIZE);
+    const tileY = Math.floor(worldY / TILE_SIZE);
+
+    console.log("tile:", tileX, tileY);
+
+    console.log("world click:", worldX, worldY);
+  };
 
   return (
     <>
-<div
-  style={{
-    position: "fixed",
-    inset: 0,
-    overflow: "hidden",
-  }}
->
-  {/* 🌍 MAP (moves) */}
-<div
-  style={{
-    position: "absolute",
-    width: "2000px",   // 👈 BIGGER than screen
-    height: "2000px",
-    backgroundImage: "url('/dungeon.jfif')",
-    backgroundSize: "contain", // 👈 show full image without crop
-    backgroundRepeat: "no-repeat",
-    transform: `translate(${worldPos.x}px, ${worldPos.y}px)`,
-  }}
-/>
-  <div
-    style={{
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      width: viewPortSize,
-      height: viewPortSize,
-      backgroundImage: "url('/warrior.png')",
-      backgroundPosition: `${heroSpriteCol * viewPortSize}px ${
-        heroStateInfo[heroState].row * viewPortSize
-      }px`,
-      backgroundRepeat: "no-repeat",
-    }}
-  />
-</div>
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          overflow: "hidden",
+        }}
+      >
+        {/* 🌍 MAP (moves) */}
+        <div
+          onClick={handleMapClick}
+          style={{
+            position: "absolute",
+            width: "2000px", // 👈 BIGGER than screen
+            height: "2000px",
+            backgroundImage: "url('/dungeon.jfif')",
+            backgroundSize: "contain", // 👈 show full image without crop
+            backgroundRepeat: "no-repeat",
+            transform: `translate(${worldPos.x}px, ${worldPos.y}px)`,
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: viewPortSize,
+            height: viewPortSize,
+            backgroundImage: "url('/warrior.png')",
+            backgroundPosition: `${heroSpriteCol * viewPortSize}px ${
+              heroStateInfo[heroState].row * viewPortSize
+            }px`,
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
