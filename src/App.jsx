@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
-import heroImg from "./assets/hero.png";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
   const [heroSpriteCol, setHeroSpriteCol] = useState(0);
   const [heroState, setHeroState] = useState("rightIdleNoWeapon");
-  const [worldPos, setWorldPos] = useState({ x: 32, y: 32 });
+  const [heroSquarePosition, setHeroSquarePosition] = useState({ x: 0, y: 0 });
+  // const [worldPos, setWorldPos] = useState({ x: 32, y: 32 });
   // const [worldPos, setWorldPos] = useState({ x: 0, y: 0});
   const viewPortSize = 64;
   const ANIMATIONSPEED = 120; // milliseconds (animation speed)
-  const TILE_SIZE = 50;
-  const mapSize = 640;
+  const TILESIZE = 64;
+  const MAPSIZE = 640;
+  const offset = MAPSIZE / 2 - TILESIZE / 2;
 
   const heroStateInfo = {
     rightIdleNoWeapon: { frameCount: 12, row: 0 },
@@ -104,22 +102,22 @@ function App() {
   //     };
   // }, []);
 
-  const handleMapClick = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+  // const handleMapClick = (e) => {
+  //   const rect = e.currentTarget.getBoundingClientRect();
 
-    const screenX = e.clientX - rect.left;
-    const screenY = e.clientY - rect.top;
+  //   const screenX = e.clientX - rect.left;
+  //   const screenY = e.clientY - rect.top;
 
-    const worldX = screenX - worldPos.x;
-    const worldY = screenY - worldPos.y;
+  //   const worldX = screenX - worldPos.x;
+  //   const worldY = screenY - worldPos.y;
 
-    const tileX = Math.floor(worldX / TILE_SIZE);
-    const tileY = Math.floor(worldY / TILE_SIZE);
+  //   const tileX = Math.floor(worldX / TILE_SIZE);
+  //   const tileY = Math.floor(worldY / TILE_SIZE);
 
-    console.log("tile:", tileX, tileY);
+  //   console.log("tile:", tileX, tileY);
 
-    console.log("world click:", worldX, worldY);
-  };
+  //   console.log("world click:", worldX, worldY);
+  // };
 
   return (
     <>
@@ -134,8 +132,8 @@ function App() {
         <div
           style={{
             position: "absolute",
-            width: `${mapSize}px`,
-            height: `${mapSize}px`,
+            width: `${MAPSIZE}px`,
+            height: `${MAPSIZE}px`,
             backgroundImage: "url('/map.jpg')",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
@@ -145,7 +143,7 @@ function App() {
             top: "50%",
             transform: `
       translate(-50%, -50%)
-      translate(${worldPos.x}px, ${worldPos.y}px)
+      translate(${offset - heroSquarePosition.x * TILESIZE}px, ${offset - heroSquarePosition.y * TILESIZE}px)
     `,
           }}
         />
