@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Goblin } from "./monsters/goblin";
 import "./App.css";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
   const TILE_SIZE = 64;
   const MAP_SIZE = 640;
   const offset = MAP_SIZE / 2 - TILE_SIZE / 2;
+  const walkingSpeed = 300;
 
   const heroStateInfo = {
     rightIdleNoWeapon: { frameCount: 12, row: 0 },
@@ -121,12 +123,30 @@ function App() {
     const interval = setInterval(() => {
       if (i >= path.length) {
         clearInterval(interval);
+
+        // idle after movement
+        setHeroState("rightIdleNoWeapon");
         return;
       }
 
-      setHeroSquarePosition(path[i]);
+      const current = path[i];
+      const next = path[i + 1];
+
+      setHeroSquarePosition(current);
+
+      // 🎯 set animation based on direction
+      if (next) {
+        const dx = next.x - current.x;
+        const dy = next.y - current.y;
+
+        if (dx === 1) setHeroState("rightWalkNoWeapon");
+        else if (dx === -1) setHeroState("leftWalkNoWeapon");
+        else if (dy === 1) setHeroState("downWalkNoWeapon");
+        else if (dy === -1) setHeroState("upWalkNoWeapon");
+      }
+
       i++;
-    }, 150); // speed of movement
+    }, walkingSpeed);
   }
 
   return (
@@ -159,6 +179,7 @@ function App() {
     `,
           }}
         />
+        <Goblin centerTilePosition={heroSquarePosition} />
         <div
           style={{
             position: "absolute",
